@@ -1,150 +1,259 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Emon Web Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emon Web Studio | Websites for Small Businesses</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-body{
-font-family: Arial;
-margin:0;
-background:#f5f5f5;
+/* --- BASE STYLES & VARIABLES --- */
+:root {
+  --primary: #2563eb; /* Modern Blue */
+  --primary-hover: #1d4ed8;
+  --dark: #0f172a; /* Deep Slate */
+  --light: #f8fafc;
+  --text: #334155;
+  --text-light: #64748b;
 }
 
-header{
-background:#111;
-color:white;
-padding:20px;
-text-align:center;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-nav{
-background:#333;
-padding:10px;
-text-align:center;
+html {
+  scroll-behavior: smooth;
 }
 
-nav a{
-color:white;
-margin:10px;
-text-decoration:none;
-font-weight:bold;
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--light);
+  color: var(--text);
+  line-height: 1.6;
 }
 
-section{
-padding:40px;
-text-align:center;
+/* --- NAVIGATION --- */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  z-index: 1000;
 }
 
-.services{
-display:flex;
-flex-direction:column;
-gap:20px;
-max-width:700px;
-margin:auto;
+nav a {
+  color: var(--dark);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
 }
 
-.card{
-background:white;
-padding:20px;
-border-radius:10px;
-box-shadow:0 0 10px rgba(0,0,0,0.1);
+nav a:hover {
+  color: var(--primary);
 }
 
-button{
-background:black;
-color:white;
-border:none;
-padding:12px 20px;
-border-radius:5px;
-cursor:pointer;
+/* --- HERO SECTION (HEADER) --- */
+header {
+  margin-top: 50px; /* Offset for fixed nav */
+  background: linear-gradient(135deg, var(--dark) 0%, #1e293b 100%);
+  color: white;
+  padding: 120px 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-button:hover{
-background:#444;
+header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  letter-spacing: -1px;
 }
 
-footer{
-background:#111;
-color:white;
-text-align:center;
-padding:20px;
+header p {
+  font-size: 1.2rem;
+  color: #cbd5e1;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+
+/* --- SECTIONS --- */
+section {
+  padding: 80px 20px;
+  text-align: center;
+  max-width: 1100px;
+  margin: auto;
+}
+
+section h2 {
+  font-size: 2.2rem;
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+
+/* A subtle underline for section headers */
+section h2::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: var(--primary);
+  margin: 10px auto 40px auto;
+  border-radius: 2px;
+}
+
+/* --- GRID LAYOUT FOR CARDS --- */
+.services {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+}
+
+/* --- CARDS --- */
+.card {
+  background: white;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+}
+
+.card h3 {
+  color: var(--dark);
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.card p {
+  color: var(--text-light);
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* --- BUTTONS --- */
+button {
+  background: var(--primary);
+  color: white;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background: var(--primary-hover);
+  transform: scale(1.02);
+}
+
+/* --- FOOTER --- */
+footer {
+  background: var(--dark);
+  color: #94a3b8;
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 0.9rem;
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 768px) {
+  header h1 { font-size: 2.2rem; }
+  nav { padding: 15px; gap: 15px; }
+  nav a { font-size: 0.85rem; }
+  section { padding: 60px 20px; }
 }
 </style>
 </head>
 
 <body>
 
-<header>
-<h1>Emon Web Studio</h1>
-<p>Affordable Websites for Cafes, Bakeries & Small Businesses</p>
-</header>
-
 <nav>
-<a href="#about">About</a>
-<a href="#services">Services</a>
-<a href="#portfolio">Portfolio</a>
-<a href="#contact">Contact</a>
+  <a href="#about">About</a>
+  <a href="#services">Services</a>
+  <a href="#portfolio">Portfolio</a>
+  <a href="#contact">Contact</a>
 </nav>
 
+<header>
+  <h1>Emon Web Studio</h1>
+  <p>Affordable, high-performing websites for Cafes, Bakeries & Local Businesses.</p>
+  <a href="#contact"><button>Get a Free Quote</button></a>
+</header>
+
 <section id="about">
-<h2>About Me</h2>
-<p>Hi, I'm Emon. I build simple and professional websites for local businesses so customers can find them online.</p>
+  <h2>About Me</h2>
+  <p style="max-width: 700px; margin: auto; font-size: 1.1rem; color: var(--text-light);">
+    Hi, I'm Emon. I specialize in building simple, professional, and fast-loading websites for local businesses. My goal is to help your customers find you easily online, so you can focus on running your business.
+  </p>
 </section>
 
 <section id="services">
-<h2>My Services</h2>
-
-<div class="services">
-
-<div class="card">
-<h3>Business Website</h3>
-<p>Professional website for shops, salons and small businesses.</p>
-</div>
-
-<div class="card">
-<h3>Cafe / Bakery Website</h3>
-<p>Show your menu, photos and location online.</p>
-</div>
-
-<div class="card">
-<h3>Website Maintenance</h3>
-<p>I update menus, photos and information when needed.</p>
-</div>
-
-</div>
+  <h2>My Services</h2>
+  <div class="services">
+    <div class="card">
+      <h3>Business Website</h3>
+      <p>Clean, professional websites tailored for shops, salons, and local service providers to establish trust online.</p>
+    </div>
+    <div class="card">
+      <h3>Cafe / Bakery Website</h3>
+      <p>Mouth-watering digital storefronts. Show off your menu, feature high-quality photos, and highlight your location.</p>
+    </div>
+    <div class="card">
+      <h3>Website Maintenance</h3>
+      <p>Focus on your customers while I handle the tech. I update menus, swap photos, and keep your site running smoothly.</p>
+    </div>
+  </div>
 </section>
 
 <section id="portfolio">
-<h2>Portfolio</h2>
-
-<div class="services">
-
-<div class="card">
-<h3>Salon Website Demo</h3>
-<p>A modern demo website made for salons and barbershops.</p>
-
-<a href="salon.html">
-<button>View Live Demo</button>
-</a>
-
-</div>
-
-</div>
-
+  <h2>Portfolio</h2>
+  <div class="services" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+    <div class="card">
+      <h3>Salon Website Demo</h3>
+      <p>A modern, highly-converting demo website designed specifically for salons and barbershops.</p>
+      <a href="salon.html">
+        <button>View Live Demo</button>
+      </a>
+    </div>
+  </div>
 </section>
 
 <section id="contact">
-<h2>Contact Me</h2>
-<p>WhatsApp: +91XXXXXXXXXX</p>
-<p>Email: this site is under development so no email and phone number now</p>
-
-<button>Contact Now</button>
-
+  <h2>Let's Work Together</h2>
+  <p style="margin-bottom: 30px; color: var(--text-light);">Ready to get your business online? Reach out today.</p>
+  
+  <div class="card" style="max-width: 500px; margin: auto;">
+    <p><strong>WhatsApp:</strong> number comming soon</p>
+    <p><strong>Email:</strong> emon.studiohq@gmail.com</p>
+    <br>
+    <a href="mailto: emon.studiohq@gmail.com">
+      <button style="width: 100%;">Email Me Directly</button>
+    </a>
+  </div>
 </section>
 
 <footer>
-<p>© 2026 Emon Web Studio</p>
+  <p>© 2026 Emon Web Studio. All rights reserved.</p>
 </footer>
 
 </body>

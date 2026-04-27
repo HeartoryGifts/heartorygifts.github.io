@@ -4,7 +4,7 @@
  * ==========================================================================
  */
 
-// 1. PRICING CONFIGURATION (Updated with New Add-ons)
+// 1. PRICING CONFIGURATION (Cleaned up for new packages)
 const pricing = {
     base: { basic: 199, premium: 399, luxury: 699 },
     pages: { "1-2": 0, "3-5": 80, "6-10": 180, "11-15": 350 },
@@ -34,12 +34,12 @@ const state = {
 const app = {
 
     init() {
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('loader').classList.add('hidden');
-                this.initScrollReveal();
-            }, 1200); 
-        });
+        // Guaranteed loader removal with fallback
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            if (loader) loader.classList.add('hidden');
+            this.initScrollReveal();
+        }, 1200);
 
         this.renderTabs();
         this.calculateAndRender();
@@ -266,4 +266,5 @@ const app = {
     }
 };
 
+// Initialize Application
 app.init();

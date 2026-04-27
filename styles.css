@@ -1,7 +1,7 @@
 /* ==========================================================================
    CSS VARIABLES & THEME
    ========================================================================== */
-   :root {
+:root {
     --bg-main: #FDFBF7; 
     --card-bg: #FFFFFF;
     --text-dark: #1A1A1A;
@@ -121,7 +121,6 @@ h1, h2, h3, h4, .logo, .step-indicator, .footer-logo { font-family: var(--font-h
 .section-title { font-size: 2.2rem; margin-bottom: 0.5rem; }
 .section-subtitle { color: var(--text-muted); margin-bottom: 2rem; font-size: 1.05rem; }
 
-/* Box Layout specific styling to accommodate lists */
 .box-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); align-items: stretch; }
 .options-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.2rem; }
 .option-card {
@@ -133,7 +132,6 @@ h1, h2, h3, h4, .logo, .step-indicator, .footer-logo { font-family: var(--font-h
 .option-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-md); border-color: var(--accent-gold); }
 .option-card.active { border-color: var(--accent-gold); background: #FCFAF5; }
 
-/* Popular Badge */
 .popular-card { border-color: var(--accent-gold); }
 .popular-badge {
     position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
@@ -146,7 +144,6 @@ h1, h2, h3, h4, .logo, .step-indicator, .footer-logo { font-family: var(--font-h
 .option-card h4 { font-size: 1.3rem; font-family: var(--font-body); font-weight: 700; }
 .tagline { font-size: 0.85rem; color: var(--accent-gold); margin-bottom: 1rem; font-style: italic;}
 
-/* Internal Box lists */
 .box-contents {
     text-align: left; margin: 1rem 0; font-size: 0.9rem; color: var(--text-dark);
     list-style: none; flex-grow: 1; padding: 1rem; background: #FAFAFA; border-radius: 8px;
@@ -265,19 +262,40 @@ h1, h2, h3, h4, .logo, .step-indicator, .footer-logo { font-family: var(--font-h
 .copyright { color: rgba(255,255,255,0.4); font-size: 0.9rem; margin-top: 2rem; }
 
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-.reveal.active { opacity: 1; transform: translateY(0); }
 
-/* Responsive */
+/* VISIBILITY FIX: Forces the website to load visible immediately */
+.reveal { opacity: 1; transform: translateY(0); transition: all 0.8s ease; }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE FIXES
+   ========================================================================== */
 @media (max-width: 1024px) {
-    .layout-grid { grid-template-columns: 1fr; }
+    /* FIX 1: Forces the left and right sides to stack on top of each other */
+    .layout-grid { grid-template-columns: 1fr; gap: 2rem; }
+    
+    /* FIX 2: Stops the summary box from floating weirdly on mobile */
     .summary-wrapper { position: static; margin-top: 1rem; }
+    
     .hero h1 { font-size: 3.5rem; }
 }
+
 @media (max-width: 768px) {
     .mobile-hide { display: none; }
-    .hero { padding: 8rem 5% 4rem; }
-    .hero h1 { font-size: 2.8rem; }
-    .card-section { padding: 2rem 1.5rem; }
+    
+    /* Centers the logo and hides the squished links */
+    .nav-container { justify-content: center; padding: 1rem 5%; }
+    .nav-links { display: none; } 
+    
+    /* Pulls your main text back up */
+    .hero { padding: 7rem 5% 3rem; }
+    .hero h1 { font-size: 2.6rem; line-height: 1.2; }
+    
+    /* FIX 3: Stacks the mode toggle buttons neatly on mobile */
+    .mode-toggle-wrapper { flex-direction: column; gap: 0.5rem; }
+    
+    /* Makes the cards look perfect on small screens */
+    .card-section { padding: 2rem 1.2rem; }
     .delivery-toggles { flex-direction: column; gap: 1rem; }
+    .options-grid { grid-template-columns: 1fr; }
+    .box-grid { grid-template-columns: 1fr; }
 }

@@ -1,2 +1,2 @@
-# heartoryGifts 
-Giftshop
+# HeartoryGifts 
+Gift Shop

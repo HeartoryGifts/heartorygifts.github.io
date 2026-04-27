@@ -4,7 +4,7 @@
  * ==========================================================================
  */
 
-// 1. PRICING CONFIGURATION (Cleaned up for new packages)
+// 1. PRICING CONFIGURATION 
 const pricing = {
     base: { basic: 199, premium: 399, luxury: 699 },
     pages: { "1-2": 0, "3-5": 80, "6-10": 180, "11-15": 350 },
@@ -34,36 +34,14 @@ const state = {
 const app = {
 
     init() {
-        // Guaranteed loader removal with fallback
+        // Guaranteed loader removal inside JS
         setTimeout(() => {
             const loader = document.getElementById('loader');
             if (loader) loader.classList.add('hidden');
-            this.initScrollReveal();
-        }, 1200);
+        }, 1200); 
 
         this.renderTabs();
         this.calculateAndRender();
-    },
-
-    // --- SCROLL ANIMATIONS ---
-    initScrollReveal() {
-        const reveals = document.querySelectorAll('.reveal');
-        const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
-
-        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
-            entries.forEach(entry => {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add('active');
-                observer.unobserve(entry.target); 
-            });
-        }, revealOptions);
-
-        reveals.forEach(reveal => {
-            revealOnScroll.observe(reveal);
-            if(reveal.getBoundingClientRect().top < window.innerHeight) {
-                reveal.classList.add('active');
-            }
-        });
     },
 
     // --- MODE SWITCHING ---

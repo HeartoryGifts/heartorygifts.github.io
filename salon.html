@@ -1,159 +1,269 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Aura | Premium Salon & Styling Studio</title>
+/**
+ * ==========================================================================
+ * HEARTORY - PREMIUM FRONTEND LOGIC & PRICING ENGINE
+ * ==========================================================================
+ */
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+// 1. PRICING CONFIGURATION (Updated with New Add-ons)
+const pricing = {
+    base: { basic: 199, premium: 399, luxury: 699 },
+    pages: { "1-2": 0, "3-5": 80, "6-10": 180, "11-15": 350 },
+    handwritten: 120,
+    addons: { 
+        perfume: 499, 
+        customGift: 299, 
+        extraChoco: 99, 
+        photo: 30 
+    },
+    courier: 99,
+    personalPackaging: { basic: 99, premium: 199, luxury: 349 }
+};
 
-<style>
-/* --- BASE & VARIABLES --- */
-:root {
-  --bg-color: #0a0a0a; 
-  --surface: #171717; 
-  --accent: #d4af37; 
-  --accent-hover: #f1c40f;
-  --text-main: #f3f4f6;
-  --text-muted: #9ca3af;
-}
+// 2. STATE MANAGEMENT
+const state = {
+    mode: 'boxes', 
+    baseTier: 'basic', 
+    pagesCount: 1,
+    letterType: 'printed', 
+    addons: { perfume: false, customGift: false, extraChoco: false, photo: false },
+    deliveryMode: 'someone',
+    letterContents: {} 
+};
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; }
+// 3. MAIN APPLICATION LOGIC
+const app = {
 
-h1, h2, h3, .brand { font-family: 'Playfair Display', serif; font-weight: 600; }
+    init() {
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                this.initScrollReveal();
+            }, 1200); 
+        });
 
-/* --- NAVIGATION --- */
-nav { position: absolute; top: 0; width: 100%; padding: 30px 50px; display: flex; justify-content: space-between; align-items: center; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
-.brand { font-size: 2rem; color: var(--accent); letter-spacing: 3px; text-decoration: none; }
-.nav-links a { color: var(--text-main); text-decoration: none; margin-left: 35px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; transition: color 0.3s ease; }
-.nav-links a:hover { color: var(--accent); }
+        this.renderTabs();
+        this.calculateAndRender();
+    },
 
-/* --- HERO SECTION --- */
-header { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; background: radial-gradient(circle at center, #1f1f1f 0%, var(--bg-color) 80%); border-bottom: 1px solid #222; position: relative; }
-header::before { content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: url('data:image/svg+xml,%3Csvg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%23ffffff" fill-opacity="0.02" fill-rule="evenodd"%3E%3Ccircle cx="3" cy="3" r="3"/%3E%3Ccircle cx="13" cy="13" r="3"/%3E%3C/g%3E%3C/svg%3E'); z-index: 0; }
-header h1, header p, header button { z-index: 1; }
+    // --- SCROLL ANIMATIONS ---
+    initScrollReveal() {
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOptions = { threshold: 0.1, rootMargin: "0px 0px -50px 0px" };
 
-header h1 { font-size: 5rem; margin-bottom: 20px; letter-spacing: 2px; text-transform: uppercase; }
-header p { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 40px; font-weight: 300; letter-spacing: 1px; }
+        const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('active');
+                observer.unobserve(entry.target); 
+            });
+        }, revealOptions);
 
-.btn { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 16px 40px; font-size: 0.9rem; font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.4s ease; }
-.btn:hover { background: var(--accent); color: var(--bg-color); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.15); }
+        reveals.forEach(reveal => {
+            revealOnScroll.observe(reveal);
+            if(reveal.getBoundingClientRect().top < window.innerHeight) {
+                reveal.classList.add('active');
+            }
+        });
+    },
 
-/* --- SERVICES MENU --- */
-section { padding: 120px 20px; max-width: 1100px; margin: auto; }
-.section-title { text-align: center; font-size: 2.8rem; margin-bottom: 20px; color: var(--accent); }
-.section-subtitle { text-align: center; color: var(--text-muted); font-size: 1rem; letter-spacing: 1px; margin-bottom: 60px; text-transform: uppercase; }
+    // --- MODE SWITCHING ---
+    setMode(newMode) {
+        state.mode = newMode;
+        
+        document.getElementById('btnMode1').classList.toggle('active', newMode === 'boxes');
+        document.getElementById('btnMode2').classList.toggle('active', newMode === 'personal');
+        
+        const secBoxes = document.getElementById('sectionBoxes');
+        const secPersonal = document.getElementById('sectionPersonal');
 
-.menu-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 40px; }
-.menu-item { background: var(--surface); padding: 40px; border-radius: 4px; border: 1px solid #262626; transition: all 0.4s ease; }
-.menu-item:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.menu-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; border-bottom: 1px dashed #404040; padding-bottom: 15px; }
-.menu-header h3 { font-size: 1.4rem; letter-spacing: 1px; color: var(--text-main); }
-.price { color: var(--accent); font-size: 1.3rem; font-family: 'Playfair Display', serif; }
-.menu-item p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+        if (newMode === 'boxes') {
+            secBoxes.classList.remove('hidden');
+            secPersonal.classList.add('hidden');
+        } else {
+            secBoxes.classList.add('hidden');
+            secPersonal.classList.remove('hidden');
+        }
 
-/* --- VIBE / GALLERY SECTION (New) --- */
-.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 40px; }
-.gallery-img { background-color: #1f1f1f; height: 300px; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: #333; font-family: 'Inter', sans-serif; letter-spacing: 2px; transition: transform 0.4s ease; border: 1px solid #262626; }
-.gallery-img:hover { transform: scale(1.02); border-color: #404040; }
+        this.selectBase('basic');
+    },
 
-/* --- FOOTER --- */
-footer { text-align: center; padding: 80px 20px 40px; background: var(--surface); border-top: 1px solid #262626; }
-footer .brand { display: block; margin-bottom: 20px; font-size: 2.5rem; }
-footer p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 10px; letter-spacing: 1px; }
+    // --- BASE TIER SELECTION ---
+    selectBase(tier) {
+        state.baseTier = tier;
+        
+        document.querySelectorAll('#sectionBoxes .option-card, #sectionPersonal .option-card').forEach(el => {
+            el.classList.remove('active');
+        });
 
-.back-btn { display: inline-block; margin-top: 40px; color: var(--text-muted); text-decoration: none; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid transparent; transition: all 0.3s ease; padding-bottom: 5px; }
-.back-btn:hover { color: var(--accent); border-bottom: 1px solid var(--accent); }
+        const prefix = state.mode === 'boxes' ? 'box-' : 'pack-';
+        document.getElementById(prefix + tier).classList.add('active');
 
-/* --- RESPONSIVE --- */
-@media (max-width: 768px) {
-  header h1 { font-size: 3.5rem; }
-  nav { flex-direction: column; gap: 20px; padding: 20px; }
-  .nav-links a { margin: 0 10px; }
-  .gallery-grid { grid-template-columns: 1fr; }
-}
-</style>
-</head>
+        this.calculateAndRender();
+    },
 
-<body>
+    // --- PAGES & LETTERS ---
+    updatePages() {
+        let count = parseInt(document.getElementById('pageCount').value);
+        if (isNaN(count) || count < 1) count = 1;
+        if (count > 15) count = 15;
+        document.getElementById('pageCount').value = count;
+        
+        state.pagesCount = count;
+        this.renderTabs();
+        this.calculateAndRender();
+    },
 
-<nav>
-  <a href="#" class="brand">AURA.</a>
-  <div class="nav-links">
-    <a href="#services">Services</a>
-    <a href="#vibe">The Studio</a>
-    <a href="#">Book</a>
-  </div>
-</nav>
+    selectLetterType(type) {
+        state.letterType = type;
+        document.getElementById('letter-printed').classList.remove('active');
+        document.getElementById('letter-handwritten').classList.remove('active');
+        document.getElementById(`letter-${type}`).classList.add('active');
+        this.calculateAndRender();
+    },
 
-<header>
-  <h1>Elevate Your Look</h1>
-  <p>Precision cuts, premium styling, and an atmosphere designed for relaxation.</p>
-  <button class="btn">Book an Appointment</button>
-</header>
+    renderTabs() {
+        const header = document.getElementById('tabsHeader');
+        const body = document.getElementById('tabsBody');
+        
+        for (let i = 1; i <= 15; i++) {
+            const textarea = document.getElementById(`letter-page-${i}`);
+            if (textarea) state.letterContents[i] = textarea.value;
+        }
 
-<section id="services">
-  <h2 class="section-title">Studio Menu</h2>
-  <p class="section-subtitle">Tailored treatments for the modern individual</p>
-  
-  <div class="menu-grid">
-    <div class="menu-item">
-      <div class="menu-header">
-        <h3>Precision Haircut</h3>
-        <span class="price">$xyz</span>
-      </div>
-      <p>Consultation, wash, tailored cut, and a hot towel finish.</p>
-    </div>
+        header.innerHTML = '';
+        body.innerHTML = '';
 
-    <div class="menu-item">
-      <div class="menu-header">
-        <h3>Color & Highlights</h3>
-        <span class="price">$xyz+</span>
-      </div>
-      <p>Custom color formulation to add depth, dimension, and shine to your hair.</p>
-    </div>
+        for (let i = 1; i <= state.pagesCount; i++) {
+            const btn = document.createElement('button');
+            btn.className = `tab-btn ${i === 1 ? 'active' : ''}`;
+            btn.innerText = `Page 0${i}`.slice(-2);
+            btn.onclick = () => this.switchTab(i);
+            header.appendChild(btn);
 
-    <div class="menu-item">
-      <div class="menu-header">
-        <h3>Beard Sculpting</h3>
-        <span class="price">$xyz</span>
-      </div>
-      <p>Trimming, shaping, and edging with straight razor precision.</p>
-    </div>
+            const panel = document.createElement('div');
+            panel.className = `tab-panel ${i === 1 ? 'active' : ''}`;
+            panel.id = `panel-${i}`;
+            panel.innerHTML = `<textarea id="letter-page-${i}" placeholder="Begin page ${i} of your story here..." style="min-height: 150px;">${state.letterContents[i] || ''}</textarea>`;
+            body.appendChild(panel);
+        }
+    },
 
-    <div class="menu-item">
-      <div class="menu-header">
-        <h3>Signature Styling & Profile</h3>
-        <span class="price">$xyz</span>
-      </div>
-      <p>A complete hair and styling consultation to match your personal aesthetic—perfect for elevating everything from modern streetwear to vintage looks.</p>
-    </div>
-  </div>
-</section>
+    switchTab(pageNum) {
+        document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', idx === pageNum - 1);
+        });
+        document.querySelectorAll('.tab-panel').forEach((panel, idx) => {
+            panel.classList.toggle('active', idx === pageNum - 1);
+        });
+    },
 
-<section id="vibe" style="background-color: #0d0d0d; padding-bottom: 120px;">
-  <div style="max-width: 1100px; margin: auto; padding: 0 20px;">
-    <h2 class="section-title" style="margin-bottom: 10px;">The Experience</h2>
-    <p class="section-subtitle">More than just a haircut.</p>
-    
-    <div class="gallery-grid">
-      <div class="gallery-img">[ Image: Salon Interior ]</div>
-      <div class="gallery-img">[ Image: Styling Details ]</div>
-      <div class="gallery-img">[ Image: Happy Client ]</div>
-    </div>
-  </div>
-</section>
+    // --- ADD-ONS ---
+    toggleAddon(addonId) {
+        state.addons[addonId] = !state.addons[addonId];
+        document.getElementById(`addon-${addonId}`).classList.toggle('active', state.addons[addonId]);
+        this.calculateAndRender();
+    },
 
-<footer>
-  <a href="#" class="brand">AURA.</a>
-  <p>123 Style Avenue, Creative District</p>
-  <p>Open Tuesday - Saturday | 10 AM - 7 PM</p>
-  
-  <br>
-  <a href="index.html" class="back-btn">← Back to Emon Web Studio</a>
-</footer>
+    // --- DELIVERY MODE ---
+    setDeliveryMode(mode) {
+        state.deliveryMode = mode;
+        const isSelf = mode === 'self';
+        
+        document.getElementById('lblRecName').innerText = isSelf ? 'Your Full Name' : 'Recipient Name';
+        document.getElementById('lblRecPhone').innerText = isSelf ? 'Your Phone Number' : 'Recipient Phone';
+        document.getElementById('lblRecAddress').innerText = isSelf ? 'Your Delivery Address' : 'Destination Address';
+    },
 
-</body>
-</html>
+    // --- PRICING ENGINE & RENDER ---
+    getPagePricing() {
+        const c = state.pagesCount;
+        if (c >= 1 && c <= 2) return pricing.pages["1-2"];
+        if (c >= 3 && c <= 5) return pricing.pages["3-5"];
+        if (c >= 6 && c <= 10) return pricing.pages["6-10"];
+        if (c >= 11 && c <= 15) return pricing.pages["11-15"];
+        return 0;
+    },
+
+    calculateAndRender() {
+        const basePrice = state.mode === 'boxes' 
+            ? pricing.base[state.baseTier] 
+            : pricing.personalPackaging[state.baseTier];
+
+        const pagesPrice = this.getPagePricing();
+        const handwritingPrice = state.letterType === 'handwritten' ? pricing.handwritten : 0;
+        const totalLetterPrice = pagesPrice + handwritingPrice;
+
+        let totalAddonsPrice = 0;
+        if (state.addons.perfume) totalAddonsPrice += pricing.addons.perfume;
+        if (state.addons.customGift) totalAddonsPrice += pricing.addons.customGift;
+        if (state.addons.extraChoco) totalAddonsPrice += pricing.addons.extraChoco;
+        if (state.addons.photo) totalAddonsPrice += pricing.addons.photo;
+
+        const grandTotal = basePrice + totalLetterPrice + totalAddonsPrice + pricing.courier;
+
+        // --- UPDATE RECEIPT UI ---
+        const baseStr = state.baseTier.charAt(0).toUpperCase() + state.baseTier.slice(1);
+        document.getElementById('sumBaseLabel').innerText = state.mode === 'boxes' ? `${baseStr} Box` : `${baseStr} Packing`;
+        document.getElementById('sumBasePrice').innerText = `₹${basePrice}`;
+
+        document.getElementById('sumPagesLabel').innerText = `${state.pagesCount} Page(s) (${state.letterType.charAt(0).toUpperCase() + state.letterType.slice(1)})`;
+        document.getElementById('sumPagesPrice').innerText = `₹${totalLetterPrice}`;
+
+        document.getElementById('sumAddonPrice').innerText = `₹${totalAddonsPrice}`;
+        document.getElementById('sumTotal').innerText = `₹${grandTotal.toLocaleString('en-IN')}`;
+
+        state.finalTotal = grandTotal;
+    },
+
+    // --- WHATSAPP CHECKOUT ---
+    checkoutWhatsApp() {
+        const rName = document.getElementById('recName').value.trim();
+        const rPhone = document.getElementById('recPhone').value.trim();
+        const rAddress = document.getElementById('recAddress').value.trim();
+
+        if (!rName || !rPhone || !rAddress) {
+            alert("Please provide the delivery details to complete your story.");
+            return;
+        }
+
+        let msg = `*✨ Heartory - A New Story Begins ✨*\n\n`;
+
+        if (state.mode === 'boxes') {
+            msg += `*Canvas:* Curated Gift Box (${state.baseTier.toUpperCase()})\n`;
+        } else {
+            const itemDesc = document.getElementById('personalItemDesc').value || 'Not specified';
+            const itemInst = document.getElementById('personalItemInst').value || 'None';
+            msg += `*Canvas:* My Personal Gift\n`;
+            msg += `*Item:* ${itemDesc}\n`;
+            msg += `*Notes:* ${itemInst}\n`;
+            msg += `*Presentation:* ${state.baseTier.toUpperCase()}\n`;
+        }
+
+        msg += `\n*Words:* ${state.pagesCount} Page(s) [${state.letterType.toUpperCase()}]\n`;
+        
+        let activeAddons = [];
+        if(state.addons.perfume) activeAddons.push('Luxury Perfume');
+        if(state.addons.customGift) activeAddons.push('Custom Mini-Gift');
+        if(state.addons.extraChoco) activeAddons.push('Extra Chocolates');
+        if(state.addons.photo) activeAddons.push('Extra Polaroid');
+        
+        msg += `*Upgrades:* ${activeAddons.length > 0 ? activeAddons.join(', ') : 'None'}\n`;
+
+        msg += `\n*Destination:* ${state.deliveryMode === 'self' ? 'Deliver to Me' : 'Deliver to Loved One'}\n`;
+        msg += `----------------------------\n`;
+        msg += `*TOTAL VALUE: ₹${state.finalTotal.toLocaleString('en-IN')}*\n`;
+        msg += `----------------------------\n\n`;
+
+        msg += `*Coordinates:*\n`;
+        msg += `Name: ${rName}\n`;
+        msg += `Phone: ${rPhone}\n`;
+        msg += `Address: ${rAddress}\n`;
+
+        const waNumber = "918798265254";
+        const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
+        
+        window.open(waUrl, '_blank');
+    }
+};
+
+app.init();

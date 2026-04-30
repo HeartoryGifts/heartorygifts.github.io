@@ -11,7 +11,7 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <link rel="stylesheet" href="styles.css?v=4">
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
 
@@ -54,7 +54,6 @@
         <div class="trust-item"><i class="fa-solid fa-truck-fast"></i> Pan-India Delivery</div>
         <div class="trust-item"><i class="fa-solid fa-gem"></i> Premium Packaging</div>
         <div class="trust-item"><i class="fa-solid fa-feather"></i> Handwritten Notes</div>
-        <div class="trust-item"><i class="fa-solid fa-shield-heart"></i> 10,000+ Stories Delivered</div>
     </div>
 
     <main class="container layout-grid" id="experience">
@@ -296,8 +295,8 @@
                     </div>
                 </div>
 
-                <button class="btn-primary" onclick="app.checkoutWhatsApp()">
-                    <i class="fa-brands fa-whatsapp" style="font-size: 1.3rem;"></i> Confirm via WhatsApp
+                <button id="orderBtn" type="button" class="btn-primary insta-btn" onclick="app.checkoutInstagram()">
+                    <i class="fa-brands fa-instagram" style="font-size: 1.3rem;"></i> Order via Instagram DM
                 </button>
                 
                 <p class="secure-text"><i class="fa-solid fa-lock"></i> 100% Secure Checkout • Heartory Guarantee</p>
@@ -311,26 +310,19 @@
             <h2 class="section-title" style="text-align: center;">Get In Touch</h2>
             <p class="section-subtitle" style="text-align: center;">Have a special request or bulk order? Reach out directly.</p>
             
-            <div class="contact-grid">
-                <a href="https://instagram.com/heartorygifts" target="_blank" class="contact-card insta">
+            <div class="contact-grid" style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+                <a href="https://instagram.com/heartorygifts" target="_blank" class="contact-card insta" style="flex: 1; max-width: 350px;">
                     <div class="contact-icon"><i class="fa-brands fa-instagram"></i></div>
                     <h3>Instagram</h3>
                     <p>@heartorygifts</p>
-                    <span>DM us for inspiration</span>
+                    <span>DM us for inspiration & orders</span>
                 </a>
                 
-                <a href="mailto:heartorygifts@gmail.com" class="contact-card email">
+                <a href="mailto:heartorygifts@gmail.com" class="contact-card email" style="flex: 1; max-width: 350px;">
                     <div class="contact-icon"><i class="fa-regular fa-envelope"></i></div>
                     <h3>Email Us</h3>
                     <p>heartorygifts@gmail.com</p>
-                    <span>For partnerships & bulk</span>
-                </a>
-                
-                <a href="https://wa.me/918798265254" target="_blank" class="contact-card whatsapp">
-                    <div class="contact-icon"><i class="fa-brands fa-whatsapp"></i></div>
-                    <h3>WhatsApp</h3>
-                    <p>+91 8798265254</p>
-                    <span>Instant chat support</span>
+                    <span>For partnerships & bulk queries</span>
                 </a>
             </div>
         </div>
@@ -344,7 +336,7 @@
         </div>
     </footer>
 
-    <script src="script.js?v=4"></script>
+    <script src="script.js?v=7"></script>
 
     <script>
         window.addEventListener('load', function() {
